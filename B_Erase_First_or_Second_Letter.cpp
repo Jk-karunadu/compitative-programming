@@ -1,39 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void find_all_strings(string s, unordered_set<string>& visited_strings) {
-    if (visited_strings.count(s)) {
-        return;
-    }
-
-    visited_strings.insert(s);
-
-    if (s.length() == 1) {
-        return;
-    }
-
-    find_all_strings(s.substr(1), visited_strings);
-    
-    find_all_strings(s.substr(0, 1) + s.substr(2), visited_strings);
-}
-
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    
+int main()
+{
     int t;
     cin >> t;
-    while (t--) {
+    while (t--)
+    {
         int n;
         cin >> n;
         string s;
         cin >> s;
-        
-        unordered_set<string> visited_strings;
+        int ans = 0;
+        int num_unique = 0;
+        unordered_map<char, int> m;
+        vector<int> dis(n);
 
-        find_all_strings(s, visited_strings);
+        for (int i = 0; i < n; i++)
+        {
+            m[s[i]]++;
+            if(m[s[i]] == 1){
+                ans++;
+            }
+            dis[i] = ans;
 
-        cout << visited_strings.size() << endl;
+        }
+        int final_ans = 0;
+
+        for(int i = 0;i<n;i++){
+            final_ans = final_ans + dis[i];
+
+        }
+
+        cout << final_ans << endl;
     }
-    return 0;
 }

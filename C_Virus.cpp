@@ -26,7 +26,7 @@ typedef vector<ll> vll;
 typedef vector<pii> vpii;
 
 #define for0(i, n) for (ll i = 0; i < (ll)(n); ++i)
-#define for1(i, n) for (ll i = 1; i <= (ll)(n); ++i)
+#define for1(i, n) for (ll i = 1; i < (ll)(n); ++i)
 #define forr(i, n) for (ll i = (ll)(n) - 1; i >= 0; --i)
 #define fora(i, a, b) for (ll i = (ll)(a); i <= (ll)(b); ++i)
 const int MOD = 1e9 + 7;
@@ -237,51 +237,61 @@ ll isqrt(ll x)
 
 void solve()
 {
-    int n;
-    cin >> n;
+    ll n, m;
+    cin >> n >> m;
+    vll a(m);
 
-    vll x(n), y(n);
-
-    for0(i, n)
+    for0(i, m)
     {
-        cin >> x[i];
+        cin >> a[i];
     }
+    vll vec;
 
-    for0(i, n)
+    sort(all(a));
+
+    for1(i, m)
     {
-        cin >> y[i];
-    }
-
-    vll v(n);
-
-    for0(i, n)
-    {
-        v[i] = y[i] - x[i];
-    }
-
-    sort(all(v));
-
-    int l = 0;
-    int h = n - 1;
-
-    int ans = 0;
-
-    while (l < h)
-    {
-        if (v[l] + v[h] >= 0)
+        ll gap = a[i] - a[i - 1] - 1;
+        if (gap > 0)
         {
-            ans++;
-            l++;
-            h--;
+            vec.pb(gap);
+        }
+    }
+
+    ll lastgap = n - a[m - 1] + a[0] - 1;
+    if (lastgap > 0)
+    {
+        vec.pb(lastgap);
+    }
+
+    sort(vec.rbegin(), vec.rend());
+
+    ll days = 0;
+    ll saved = 0;
+
+    for0(i, sz(vec))
+    {
+        ll rem = vec[i] - 2 * days;
+
+        if (rem <= 0)
+            continue;
+
+        if (rem == 1)
+        {
+            saved += 1;
+            days += 1;
         }
         else
         {
-            l++;
+            saved += rem - 1;
+            days += 2;
         }
     }
 
-    cout << ans << endl;
+    cout << n - saved << endl;
 }
+
+
 int main()
 {
     fast_io;

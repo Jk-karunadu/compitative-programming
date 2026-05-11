@@ -24,9 +24,10 @@ typedef pair<ll, ll> pll;
 typedef vector<int> vi;
 typedef vector<ll> vll;
 typedef vector<pii> vpii;
+typedef vector<vector<int>> vvi;
 
 #define for0(i, n) for (ll i = 0; i < (ll)(n); ++i)
-#define for1(i, n) for (ll i = 1; i <= (ll)(n); ++i)
+#define for1(i, n) for (ll i = 1; i < (ll)(n); ++i)
 #define forr(i, n) for (ll i = (ll)(n) - 1; i >= 0; --i)
 #define fora(i, a, b) for (ll i = (ll)(a); i <= (ll)(b); ++i)
 const int MOD = 1e9 + 7;
@@ -234,54 +235,92 @@ ll isqrt(ll x)
 
     return lo;
 }
-
 void solve()
 {
     int n;
     cin >> n;
 
-    vll x(n), y(n);
+    vvi vec(n, vi(n));
 
     for0(i, n)
     {
-        cin >> x[i];
+        string s;
+        cin >> s;
+
+        for0(j, n)
+        {
+            vec[i][j] = s[j] - '0';
+        }
     }
 
-    for0(i, n)
+    vvi lin;
+
+    for0(i, n / 2)
     {
-        cin >> y[i];
+        vi v;
+
+        // top row
+        for (int j = i; j < n - i - 1; j++)
+        {
+            v.pb(vec[i][j]);
+        }
+
+        // right col
+        for (int j = i; j < n - i - 1; j++)
+        {
+            v.pb(vec[j][n - i - 1]);
+        }
+
+        // bottom row
+        for (int j = n - i - 1; j > i; j--)
+        {
+            v.pb(vec[n - i - 1][j]);
+        }
+
+        // left col
+        for (int j = n - i - 1; j > i; j--)
+        {
+            v.pb(vec[j][i]);
+        }
+
+        lin.pb(v);
     }
 
-    vll v(n);
-
-    for0(i, n)
-    {
-        v[i] = y[i] - x[i];
-    }
-
-    sort(all(v));
-
-    int l = 0;
-    int h = n - 1;
-
+    int m = lin.size();
     int ans = 0;
 
-    while (l < h)
+    for0(i, m)
     {
-        if (v[l] + v[h] >= 0)
+        int sz1 = lin[i].size();
+
+        for (int k = 0; k < sz1 / 4; k++)
         {
-            ans++;
-            l++;
-            h--;
-        }
-        else
-        {
-            l++;
+            int ones = 0;
+            int zeros = 0;
+
+            int p = k;
+
+            while (p < sz1)
+            {
+                if (lin[i][p] == 1)
+                {
+                    ones++;
+                }
+                else
+                {
+                    zeros++;
+                }
+
+                p += sz1 / 4;
+            }
+
+            ans += min(ones, zeros);
         }
     }
 
     cout << ans << endl;
 }
+
 int main()
 {
     fast_io;
